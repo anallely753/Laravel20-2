@@ -1,11 +1,12 @@
 # Laravel 20-2 
+## Lunes
 
 ### Creación de nuevo proyecto
 
 > laravel new MiProyecto 
 >
 ---
-
+## Martes
 ### Autenticación
 
 Implementar  Registro e Inicio de sesión con ayuda de composer
@@ -20,7 +21,7 @@ Corremos las migraciones
 
 Si hemos configurado nuestra base de datos correctamente ya podemos hacer el registro de un nuevo usuario. Podemos probar también cerrando sesión e iniciando nuevamente. 
 
----
+## Miércoles
 
 ### Rutas y controladores
 ---
@@ -280,6 +281,8 @@ También la pondremos en `layouts/app.blade.php` para que al dar click en la opc
 ````php
 <a href="{{ route('admintareas.index') }}">Administrador</a>
 ````
+
+## Jueves
 
 #### Crear Tareas
 Hacemos nuestra nueva vista `create.blade.php`
@@ -623,6 +626,7 @@ Hacemos modelo, controlador y migración
 Ahora definimos las columnas que tendrá mi tabla
 >Database/migrations/create_entregas_table
 
+#### Tabla
 A qué usuario pertenece y que tarea está subiendo
 ```php
 $table->unsignedBigInteger('user_id');
@@ -677,7 +681,9 @@ Hacemos la ruta del controlador en
 ```php
 Route::resource('entrega', 'EntregaController');
 ```
+## Viernes
 
+#### Vistas 
 En la vista `home.blade.php` damos ruta a nuestro botón de subir archivo, el cuál nos llevará a otra vista
 
 ```php
@@ -694,17 +700,7 @@ Heredamos nuestra plantilla
 ```
 Y pegamos código de `entregas.html` dentro de la sección
 
-En la función **'@show'**
->App/Http/Controller/EntregaController 
-
-Identificamos la tarea que está subiendo el usuario y pasamos esa información a la vista
-```php
-$tarea=Tarea::findOrFail($id);
-return view('entregas.show',['tarea'=>$tarea]);
-```
-*Importamos con use App\Tarea;*
-
-Dentro de nuestro formulario en `show.blade.php` tenemos un input que es invisble para el usuario, lo usaremos de auxiliar para pasar el id de la tarea 
+En nuestro formulario en `show.blade.php` tenemos un input que es invisble para el usuario, lo usaremos de auxiliar para pasar el id de la tarea 
 ```php
 value="{{ $tarea->id }}"
 ```
@@ -717,7 +713,18 @@ sin olvidarnos de estas tres lineas importantes
 method=”POST”
 enctype="multipart/form-data"
 @csrf
+````
+
+En la función **'@show'**
+>App/Http/Controller/EntregaController 
+
+Identificamos la tarea que está subiendo el usuario y pasamos esa información a la vista
+```php
+$tarea=Tarea::findOrFail($id);
+return view('entregas.show',['tarea'=>$tarea]);
 ```
+*Importamos con use App\Tarea;*
+
 En la función **'@store'**
 >App/Http/Controller/EntregaController 
 
@@ -747,8 +754,7 @@ $entrega->save();
 return redirect('home');
 ```
 *Importamos use App\Entrega y 
-use Illuminate\Support\Facades\Auth;
-*
+use Illuminate\Support\Facades\Auth;*
 
 ### Mostrar tabla de entregas de cada tarea
 
@@ -762,7 +768,7 @@ Pasamos los datos de las entregas
 ```php
 $tarea=Tarea::findOrFail($id);
 $entregas=Entrega::all();
-return view('tareas.show', ['tarea'=>Tarea::findOrFail($id), 'entregas'=>$entregas]);
+return view('admin.tareas.show', ['tarea'=>Tarea::findOrFail($id), 'entregas'=>$entregas]);
  ```
 *Importamos use App\Entrega;*
 
@@ -777,3 +783,91 @@ En la vista `tareas/show.blade.php` haremos un ciclo foreach para recorrer las e
 @endforeach
 ``` 
 Y ponemos los valores correspondientes
+
+```php
+<th scope="row">{{ $entrega->user->name }}</th>
+<a target="_blank" href="{{ asset("entregas/$entrega->file") }}">{{ $entrega->file }}</a>
+````
+
+#### Para subir las calificaciones
+Dentro de  `tareas/show.blade` en el formulario ponemos la acción que será la funcion **@update**
+
+```php
+<form action="{{ route('entrega.update', $entrega->id) }}" method="POST">
+@method('PATCH')
+@csrf
+````
+
+En la función **'@update'**
+>App/Http/Controller/EntregaController 
+
+```php
+$entrega=Entrega::findOrFail($id);
+entrega->grade=$request->get('grade');
+$entrega->update();
+return back();
+```` 
+
+Para que se muestren las calificaciones ya guardadas
+```php
+<input type="number" min="0" max="10" name="cal" 
+@if(!$entrega->cal==NULL)
+value="{{ $entrega->cal }}" 
+@else
+value="0"
+@endif
+>
+````
+
+### Tabla de calificaciones para el usuario
+
+Hacemos una nueva vista
+>Resources/Views/cal.blade.php
+
+Y pegamos el código de nuestro archivo `cal.html`
+
+Hacemos una nueva función en el controlador de Home
+>App/Http/Controller/HomeController 
+```php
+public function cal($id){
+	return view('cal');
+}
+````
+Y hacemos la ruta en `web.php` pasandole un parámetro
+```php
+Route::get('/cal/{id}', 'HomeController@cal');
+```
+Ese parámetro lo pasaremos desde la plantilla `app.blade.php`
+```php
+<a href="{{ url('cal/'.Auth::user()->id) }}">Calificaciones</a>
+ ```
+
+Y ahora pasamos a la vista los datos necesarios para que nos pueda mostrar las calificaciones
+
+```php
+$entregas=Entrega::all();
+$user=User::findOrFail($id);
+return 
+view('cal', ['entregas'=>$entregas, 'user'=>$user]);
+````
+
+*Importamos use App\User; y use App\Entrega;*
+
+Ahora solo falta mostrar los datos en las vistas con un foreach
+
+```php
+@foreach($entregas as $entrega)
+@if($entrega->user_id==$user->id)
+@if(!$entrega->cal==NULL)
+<tr>
+	<th scope="row">{{ $entrega->tarea->title}}</th>
+	<td>{{ $entrega->cal}}</td>
+</tr>
+@endif
+@endif
+@endforeach
+```
+
+
+
+
