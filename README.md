@@ -12,8 +12,12 @@
 Implementar  Registro e Inicio de sesión con ayuda de composer
 
 > composer require laravel/ui
+
+
 > php artisan ui vue --auth
+
 > npm install
+
 > npm run dev
 
 Corremos las migraciones
