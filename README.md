@@ -64,24 +64,51 @@ Copiamos el contenido del archivo `layout_app.html` y lo  reemplazamos por el qu
 ```php
 @yield('content)
 ```
+Para el idioma podemos ocupar la variable
+```php
+lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+```
+Y para el nombre de nuestra aplicación 
+```php
+ <title>{{ config('app.name') }} - {{ config('app.inicio') }}</title>
+ ```
+ en config/app.php
+ ```php
+ 'inicio' => "Inicio",
+ ```
+
 Modificamos las rutas 
 ```html
 <a href="{{route('login')}}">Iniciar sesión</a>
 <a href="{{route('register')}}">Registro</a>
-<a href="{{url('/')}}">Inicio</a>
-```
-En donde dice 'mi nombre' ponemos la variable
- ``{{ Auth::user()->name }}``
- 
+<a href="{{route('home')}}">Inicio</a>
+``` 
  Y para cerrar sesión copiamos la siguiente ruta
  ```html
   <a class="dropdown-item" href="{{ route('logout') }}"                            onclick="event.preventDefault();                           document.getElementById('logout-form').submit();">
 Cerrar sesión</a>
 ````
+Creamos un usuario para probar
+
+### Integrando vista principal (home)
+
+Copiamos el código que está dentro de la etiqueta ````<body>```` del archivo `home.html` y lo pegamos en
+>Resources/views/home.blade.php
+
+Ocultamos las opciones con 
+@guest
+@else
+@endguest
+
+En donde dice 'mi nombre' ponemos la variable una vez que estamos loggeados
+ ``{{ Auth::user()->name }}``
+----
 Ahora sigue reemplazar nuestras vistas de autentificación
 Copiamos el contenido de `register.html` y lo pegamos dentro de `register.blade.php` sin borrar lo que se encuentra ahí
 
 Dentro de los inputs vamos reemplazando los atributos y los mensajes de error.
+
+le ponemos a form un metodo post  action="{{route('register')}}"
 
 Los mismo hacemos con `login.html` y `login.blade.php`
 
@@ -124,10 +151,6 @@ Por default, nuestro primer usuario no es administrador por lo que tenemos que c
 
 ---
 
-### Integrando vista principal (home)
-
-Copaimos el código que está dentro de la etiqueta ````<body>```` del archivo `home.html` y lo pegamos en
->Resources/views/home.blade.php
 
 ---
 ### Perfil de administrador
