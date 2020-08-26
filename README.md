@@ -13,7 +13,6 @@ Implementar  Registro e Inicio de sesión con ayuda de composer
 
 > composer require laravel/ui
 
-
 > php artisan ui vue --auth
 
 > npm install
@@ -25,10 +24,58 @@ Corremos las migraciones
 
 Si hemos configurado nuestra base de datos correctamente ya podemos hacer el registro de un nuevo usuario. Podemos probar también cerrando sesión e iniciando nuevamente. 
 
-## Miércoles
+----
+### Modificar tabla users
+Agregar una columna que especifique si el usuario es administrador o no. 
+> /database/migrations/create_users_table
 
-### Rutas y controladores
----
+Agregamos la columna de tipo booleano que por default tendrá falso, es decir, que no es administrador. 
+
+```php
+$table->boolean('admin')->default(false); 
+``` 
+
+Dentro de 
+>App/User.php
+
+Agregamos **'admin'** en la siguiente sección
+````php
+protected $fillable = [
+        'name', 'email', 'password', 'admin'
+]; 
+````
+
+y hacemos la migración
+>php artisan migrate:fresh
+
+Ya tenemos la estructura principal de nuestra página y los permisos, ahora pasamos a la sección de tareas, donde los usuarios administradores podrán subir una tarea a la plataforma, y esta será visible para los alumnos. 
+
+Hacemos modelo, controlador y migración
+
+>php artisan make:model Tarea
+
+>php artisan make:migration create_tareas_table
+
+*El nombre del modelo deberá empezar con mayúscula*
+
+#### Tabla de Tareas en nuestra Base de Datos
+Empezaremos definiendo los datos que contendrá nuestra tabla de tareas, para eso, vamos al archivo de migración que acabamos de crear
+>Database/migrations/create_tareas_table.php
+
+Y definimos qué columnas llevará nuestra tabla, tomando el cuenta el tipo de dato
+
+```php
+$table->string('title');
+$table->text('description');
+$table->date('date');
+$table->time('time');
+$table->string('filetype');
+$table->string('file')->nullable();
+````
+Hacemos la migración
+>php artisan migrate
+
+## Miércoles
 
 ### Integrando vistas 
 
@@ -39,7 +86,7 @@ Hasta ahorita tenemos las vistas de autenticación, home, welcome, y layout/app 
 
 La primera vista que modificaremos será la de welcome, que copiaremos de nuestro archivo `index.html`
 
-Para no tener problema usando los archivos de la carpeta public, definiremos las rutas con ayuda de assets de la siguiente manera
+Para no tener problema usando los archivos de la carpeta public, definiremos las rutas con ayuda de assets de la siguiente manera. 
  ```html
  <link rel="stylesheet" href="{{asset('css/styles.css')}}">`
 ```
@@ -56,7 +103,10 @@ Para las rutas podemos hacerlo mediante *url* escribiendo la ruta relativa si es
 <a href="{{ route('login') }}">
  ```
 
-Ahora, haremos uso de las plantillas para poder reciclar nuestra barra de navegación en todas nuestras páginas,  estas se encuentran e la carpeta 
+Para saber el nombre de nuestras rutas usamos el comando
+> php artisan route:list
+
+Ahora, haremos uso de las plantillas para poder reciclar nuestra barra de navegación en todas nuestras páginas,  estas se encuentran en la carpeta 
 >/Resources/views/layouts/
 
 Copiamos el contenido del archivo `layout_app.html` y lo  reemplazamos por el que está en `app.blade.php` e insertamos la sección de contenido 
@@ -92,6 +142,10 @@ Creamos un usuario para probar
 
 ### Integrando vista principal (home)
 
+@extends('layouts.app')
+@section('content)
+@endsection
+
 Copiamos el código que está dentro de la etiqueta ````<body>```` del archivo `home.html` y lo pegamos en
 >Resources/views/home.blade.php
 
@@ -102,7 +156,10 @@ Ocultamos las opciones con
 
 En donde dice 'mi nombre' ponemos la variable una vez que estamos loggeados
  ``{{ Auth::user()->name }}``
+ 
 ----
+### Vistas de autentificación
+
 Ahora sigue reemplazar nuestras vistas de autentificación
 Copiamos el contenido de `register.html` y lo pegamos dentro de `register.blade.php` sin borrar lo que se encuentra ahí
 
@@ -113,30 +170,6 @@ le ponemos a form un metodo post  action="{{route('register')}}"
 Los mismo hacemos con `login.html` y `login.blade.php`
 
 ---
-
-### Modificar tabla users
-Agregar una columna que especifique si el usuario es administrador o no. 
-> /database/migrations/create_users_table
-
-Agregamos la columna de tipo booleano que por default tendrá falso, es decir, que no es administrador. 
-
-```php
-$table->boolean('admin')->default(false); 
-``` 
-
-Dentro de 
->App/User.php
-
-Agregamos **'admin'** en la siguiente sección
-````php
-protected $fillable = [
-        'name', 'email', 'password', 'admin'
-]; 
-````
-
-y hacemos la migración
->php artisan migrate:fresh
-
 Ahora ya podemos personalizar la barra de navegación para que la opción 'Administrador' solo aparezca a los que lo son.
 >resources/views/layouts/app.blade.php
 
@@ -150,34 +183,56 @@ Lo hacemos con una condicional if
 Por default, nuestro primer usuario no es administrador por lo que tenemos que cambiarlo directamente en la base de datos.
 
 ---
-
-
----
 ### Perfil de administrador
 #### Middleware
 Creamos un nuevo middleware
->php artisan make:middleware Admin
+>php artisan make:middleware AdminMiddleware
 
 Y ponemos dentro de la función:
 ```php
-public function handle($request, Closure $next)
-{
-	if(!auth()->check()){
-	return redirect('/login');
-	}
-	if(!auth()->user()->admin){
-	return redirect('/login');
-	}
-	
-	return $next($request);
+if(auth()->user()->admin){
+  return $next($request);
 }
+return redirect('home');
 ````
 Esto permitirá que unicamente los usuarios administradores tengan acceso.
 
-Ahora tenemos que hacer su ruta en 
->Routes/web.php
+Hacemos una ruta de prueba
 
-Haremos uso de los grupos de rutas ya que hay varias páginas a las que les aplicaremos el mismo Middleware
+```php
+Route::get('prueba', function(){
+	return "Soy admin";
+})->middleware('admin');
+````
+
+Tenemos que darle un alias a ese Middleware para que sea reconocido
+>App/Http/Kernel.php
+````php
+'admin'=>\App\Http\Middleware\Admin::class
+````
+
+Vamos a hacer otro nadamas para ver si quedó claro. Yo quiero que una vez que el usuario inicie sesión ya no pueda ir  a la ruta raiz, entonces aplico un Middleware que haga que si el usuario está autenticado lo redirija igual a esta vista de home. 
+
+>php artisan make:middleware WelcomeMiddleware
+
+```php
+if(!auth()->guest()){
+	return $next($request);
+}
+return redirect('home');
+```` 
+Lo aplicamos a nuestra ruta raíz
+```php
+Route::get('/', function () {
+    return view('welcome');
+})->middleware('welcome');
+````
+Y le damos el alias
+```php
+'welcome' => \App\Http\Middleware\WelcomeMiddleware::class
+````
+
+También podemos agrupar rutas y aplicarles el mismo Middleware
 
 ````php
 Route::middleware(['admin'])->group(function () {
@@ -187,24 +242,9 @@ Route::middleware(['admin'])->group(function () {
 
 Y ahora todo lo que esté dentro de esa función, no será accesible para usuarios que no sean administradores. 
 
-Únicamente falta darle un alias a ese Middleware para que sea reconocido
->App/Http/Kernel.php
-````php
-'admin'=>\App\Http\Middleware\Admin::class
-````
-
-Ahora odemos hacer una ruta solo para probar que funcione
->Routes/web.php
-
-````php
-Route::get('prueba', function () {
-	return 5;
-});
-````
-Si buscamos esa ruta en el servidor siendo usuarios administradores no debería haber problema, pero si hacemos otro usuario sin perfil de administrador no podríamos accesar. 
+Podemos probar con la ruta que hicimos hace rato
 
 ---
-
 ### Vista de administrador
 Haremos un nuevo layout para que los administradores tengan su propia barra de navegación.
 Cómo es muy parecida a la que ya tenemos, duplicaremos ese archivo bajo el nombre de `admin.blade.php` en la misma carpeta
@@ -227,7 +267,7 @@ Y las rutas necesarias
 ````
 La de logout la podemos copiar del archivo `app.blade.php`
 
-Para verificar, en la ruta de prueba que habíamos hecho cambiamos el valor de regreso por la vista de nuestra nueva plantilla
+Para verificar, en la ruta de prueba que habíamos hecho cambiamos el valor de regreso por la vista de nuestra nueva plantilla. El nombre que va dentro del parentesis hace referencia a la ruta del archivo. 
 
 ````php
 Route::get('prueba', function () {
@@ -237,33 +277,10 @@ Route::get('prueba', function () {
 
 ---
 ### Tareas
+Para controlar todo lo que haremos con las tareas como agregar, editar, borrar, etc. Haremos un controlador de recursos que ya traer algunas de las principales operaciones hechas.
 
-Ya tenemos la estructura principal de nuestra página y los permisos, ahora pasamos a la sección de tareas, donde los usuarios administradores podrán subir una tarea a la plataforma, y esta será visible para los alumnos. 
-
-Hacemos modelo, controlador y migración
-
->php artisan make:model Tarea
 >php artisan make:controller TareaController -r
->php artisan make:migration create_tareas_table
 
-*El nombre del modelo deberá empezar con mayúscula*
-
-#### Tabla de Tareas en nuestra Base de Datos
-Empezaremos definiendo los datos que contendrá nuestra tabla de tareas, para eso, vamos al archivo de migración que acabamos de crear
->Database/migrations/create_tareas_table.php
-
-Y definimos qué columnas llevará nuestra tabla, tomando el cuenta el tipo de dato
-
-```php
-$table->string('title');
-$table->text('description');
-$table->date('date');
-$table->time('time');
-$table->string('filetype');
-$table->string('file')->nullable();
-````
-Hacemos la migración
->php artisan migrate
 
 #### Controlador de recursos
 Este tipo de controlador contiene las operaciones fundamentales que se pueden hacer con una tabla
@@ -308,8 +325,6 @@ También la pondremos en `layouts/app.blade.php` para que al dar click en la opc
 ````php
 <a href="{{ route('admintareas.index') }}">Administrador</a>
 ````
-
-## Jueves
 
 #### Crear Tareas
 Hacemos nuestra nueva vista `create.blade.php`
@@ -894,6 +909,7 @@ Ahora solo falta mostrar los datos en las vistas con un foreach
 @endif
 @endforeach
 ```
+
 
 
 
