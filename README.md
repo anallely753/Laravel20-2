@@ -315,6 +315,7 @@ en la funcion **index** regresamos nuestra vista
 ```php
 return view('admin.tareas.index');
 ````
+## Jueves 
 Y en la plantilla `layouts/admin.blade.php`ponemos la ruta correspondiente
 ```php
 <a href="{{ route('admintareas.index') }}">Tareas</a>
@@ -372,8 +373,9 @@ Dentro del controlador
 >App/Http/Controllers/TareaController.php
 >
 en la función **store** :
+>Eloquent ORM/ Insterting an Updating models
 
-Creamos una nueva tarea 
+Creamos una nueva instancia de nuestro Modelo Tarea
 
 ```php
 $tarea=new Tarea();
@@ -381,23 +383,21 @@ $tarea=new Tarea();
 
 *Cada que hagamos uso de un modelo, hay que importarlo con `use App\Tarea;` ya que no se encuentran dentro de la misma carpeta*
 
-Vamos a ir por columnas específicando cual de todos los datos que obtuvimos del formulario es el que se va a guardar ahí
+Vamos a ir por atributos específicando cual de todos los datos que obtuvimos del formulario es el que se va a guardar ahí
 
 ```php
-$tarea->title=request($key='title');
-$tarea->description=request($key = 'description');
-$tarea->date=request($key = 'date');
-$tarea->time=request($key = 'time');
-$tarea->filetype=request($key = 'filetype');
+ $tarea->title=$request->title;
+$tarea->description=$request->description;
+$tarea->date=$request->date;
+$tarea->time=$request->time;
+$tarea->filetype=$request->filetype;
 ````
-
-*En `$key`pondremos el nombre de nuestro input para que pueda identificarlo, ese nombre está bajo el atributo `name` en nuestr archivo .blade*
 
 Los archivos no se guardan directamente en la base de datos, sino como un archivo en nuestro proyecto, por lo que en la base unicamente se guardará la ruta a ese archivo.
 
 Hacemos una variable donde se guardará el archivo obtenido del formulario
 ```php
-$file=request($key='file');
+ $file = $request->file;
 ```
 Hacemos otra variable donde se guardará el nombre de ese archivo
 ```php
@@ -430,11 +430,11 @@ Si al momento de crear la tarea dejamos el campo del archivo vacío nos puede ma
 
 ```php
 if ($request->hasFile('file')) {
-	$file = $request->file('file');
-	$name=$file->getClientOriginalName();
-	$destination = public_path() . '/tareas/';
-	$file->move($destination, $name);
-	$tarea->file=$name;
+  $file = $request->file;
+  $name=$file->getClientOriginalName();
+  $destination = public_path() . '/tareas/';
+  $file->move($destination, $name);
+  $tarea->file=$name;
 }
 ```
 ### Mostrar tareas en la vista Tareas index
@@ -661,11 +661,12 @@ Y para el archivo
 
 Hacemos modelo, controlador y migración
 
->php artisan make:model Entrega
+>php artisan make:model Entrega -m
 >php artisan make:controller EntregaController -r
+o
 >php artisan make:migration create_entregas_table
 
-Ahora definimos las columnas que tendrá mi tabla
+Ahora definimos los atributos
 >Database/migrations/create_entregas_table
 
 #### Tabla
@@ -909,8 +910,5 @@ Ahora solo falta mostrar los datos en las vistas con un foreach
 @endif
 @endforeach
 ```
-
-
-
 
 
