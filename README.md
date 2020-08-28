@@ -315,6 +315,7 @@ en la funcion **index** regresamos nuestra vista
 ```php
 return view('admin.tareas.index');
 ````
+
 ## Jueves 
 Y en la plantilla `layouts/admin.blade.php`ponemos la ruta correspondiente
 ```php
@@ -437,6 +438,69 @@ if ($request->hasFile('file')) {
   $tarea->file=$name;
 }
 ```
+### Entregas
+
+Hacemos modelo, controlador y migración
+
+>php artisan make:model Entrega -m
+>php artisan make:controller EntregaController -r
+o
+>php artisan make:migration create_entregas_table
+
+Ahora definimos los atributos
+>Database/migrations/create_entregas_table
+
+#### Tabla
+A qué usuario pertenece y que tarea está subiendo
+```php
+$table->unsignedBigInteger('user_id');
+$table->unsignedBigInteger('tarea_id');
+```
+El archivo que está entregando
+```php
+$table->string('file')->nullable();
+```
+La calificación
+```php
+$table->integer('cal')->default(0)->nullable();
+```
+Y definimos las que serán llaves foráneas
+```php
+$table->foreign('user_id')->references('id')->on('users');
+$table->foreign('tarea_id')->references('id')->on('tareas');
+```
+Hacemos la migración
+>php artisan migrate
+
+Ahora hay que definir de que manera se van a relacionar los modelos User, Tarea y Entrega por medio de funciones
+
+>App/User.php
+
+```php
+public function entregas(){
+return $this->hasMany('App\Entrega');
+}
+```
+>App/Entrega.php
+
+```php
+public function user(){
+return $this->belongsTo('App\User');
+}
+
+public function tarea(){
+return $this->belongsTo('App\Tarea');
+}
+```
+>App/Tarea.php
+
+```php
+public function entregas(){
+return $this->hasMany('App\Entrega');
+}
+```
+## Viernes
+
 ### Mostrar tareas en la vista Tareas index
 
 Ya que tenemos guardadas nuestras tareas en la base de datos lo que sigue sería mostrarlas en la página index.
@@ -495,14 +559,29 @@ Y pegamos el mismo código de `create.blade.php`
 En  `index.blade.php` le ponemos ruta al botón **'Editar'** junto con el parámetro para que sepa exactamente que tarea editar
 ```html
 <a href="{{ route('admintareas.edit', $tarea->id) }}">Editar</a>
-```
+```` 
 En la función **'@edit'**
 >App/Http/Controller/TareaController 
 
 Primero buscamos la tarea haciendo uso del parámetro id
+>[Retrieving Single Models / Aggregates](https://laravel.com/docs/7.x/eloquent#retrieving-single-models)
 ```php
+
 $tarea=Tarea::findOrFail($id);
 return view('admin.tareas.edit', ['tarea'=>$tarea]);
+```
+Ya tenemos los datos, solo hay que especificar lo que se hará al momento de dar en Submit 
+```php
+<form method="POST" action="{{ route('admintareas.update', $tarea->id) }}">
+```
+Para poder guardar archivos
+```php
+enctype="multipart/form-data"
+```
+Y para poder guardar
+```php
+@method('PATCH')
+@csrf
 ```
 Ahora mostraremos los datos en el formulario para  los podamos editar, cómo son input, podemos hacer uso del atributo "value"
 
@@ -544,19 +623,6 @@ Si no hay archivo, únicamente damos la opción de subirlo
 </div>
 @endif
 ```
-
-Ya tenemos los datos, solo hay que especificar lo que se hará al momento de dar en Submit 
-```php
-<form method="POST" action="{{ route('admintareas.update', $tarea->id) }}">
-```
-Para poder guardar archivos
-```php
-enctype="multipart/form-data"
-```
-Y para poder guardar
-```php
-@method('PATCH')
-@csrf
 ```
 Ahora definimos donde guardar los datos modificados. Es muy parecido a la funcion **@store**
 
@@ -656,81 +722,16 @@ Y para el archivo
 ```php
 <a target="_blank" href="{{ asset("tareas/$tarea->file") }}">{{ $tarea->file }}</a>
 ```
+## Entregas
 
-### Entregas
-
-Hacemos modelo, controlador y migración
-
->php artisan make:model Entrega -m
+Hacemos controlador
 >php artisan make:controller EntregaController -r
-o
->php artisan make:migration create_entregas_table
 
-Ahora definimos los atributos
->Database/migrations/create_entregas_table
-
-#### Tabla
-A qué usuario pertenece y que tarea está subiendo
-```php
-$table->unsignedBigInteger('user_id');
-$table->unsignedBigInteger('tarea_id');
-```
-El archivo que está entregando
-```php
-$table->string('file')->nullable();
-```
-La calificación
-```php
-$table->integer('cal')->default(0)->nullable();
-```
-Y definimos las que serán llaves foráneas
-```php
-$table->foreign('user_id')->references('id')->on('users');
-$table->foreign('tarea_id')->references('id')->on('tareas');
-```
-Hacemos la migración
->php artisan migrate
-
-Ahora hay que definir de que manera se van a relacionar los modelos User, Tarea y Entrega por medio de funciones
-
->App/User.php
-
-```php
-public function entregas(){
-return $this->hasMany('App\Entrega');
-}
-```
->App/Entrega.php
-
-```php
-public function user(){
-return $this->belongsTo('App\User');
-}
-
-public function tarea(){
-return $this->belongsTo('App\Tarea');
-}
-```
->App/Tarea.php
-
-```php
-public function entregas(){
-return $this->hasMany('App\Entrega');
-}
-```
 Hacemos la ruta del controlador en 
 >Routes/web.php
 
 ```php
 Route::resource('entrega', 'EntregaController');
-```
-## Viernes
-
-#### Vistas 
-En la vista `home.blade.php` damos ruta a nuestro botón de subir archivo, el cuál nos llevará a otra vista
-
-```php
-<a href="{{ route('entrega.show', $tarea->id) }}">Subir archivo</a>
 ```
 Hacemos vista `show.blade.php` y nueva carpeta
 >Resources/views/entregas/show.blade.php
@@ -742,6 +743,18 @@ Heredamos nuestra plantilla
 @endsection
 ```
 Y pegamos código de `entregas.html` dentro de la sección
+
+En la vista `home.blade.php` damos ruta a nuestro botón de subir archivo, el cuál nos llevará a otra vista
+
+```php
+<a href="{{ route('entrega.show', $tarea->id) }}">Subir archivo</a>
+```
+
+En **@show**
+```php
+$tarea=Tarea::findOrFail($id);
+return view('admin.tareas.show', ['tarea'=>$tarea]);
+````
 
 En nuestro formulario en `show.blade.php` tenemos un input que es invisble para el usuario, lo usaremos de auxiliar para pasar el id de la tarea 
 ```php
@@ -757,16 +770,9 @@ method=”POST”
 enctype="multipart/form-data"
 @csrf
 ````
-
-En la función **'@show'**
->App/Http/Controller/EntregaController 
-
-Identificamos la tarea que está subiendo el usuario y pasamos esa información a la vista
-```php
-$tarea=Tarea::findOrFail($id);
-return view('entregas.show',['tarea'=>$tarea]);
-```
 *Importamos con use App\Tarea;*
+
+#### Vistas 
 
 En la función **'@store'**
 >App/Http/Controller/EntregaController 
@@ -775,15 +781,17 @@ Hacemos un nuevo objeto 'Entrega'
 ```php
 $entrega=new Entrega();
 ```
+*use App\Entrega;*
+
 Pasamos el valor del id de la tarea y del usuario
 ```php
 $entrega->tarea_id=request($key = 'tarea_id');
-$entrega->user_id=Auth::user()->id;
+$entrega->user_id=auth()->user()->id;
 ```
 Para el archivo es lo mismo que habíamos hecho en la sección de tareas
 ```php
 $file = $request->file('file');
-$username=Auth::user()->name;
+$username=auth()->user()->name;
 $name=$username.$file->getClientOriginalName();
 ```
 Hacemos nueva carpeta 
@@ -846,7 +854,7 @@ En la función **'@update'**
 
 ```php
 $entrega=Entrega::findOrFail($id);
-entrega->grade=$request->get('grade');
+$entrega->cal=$request->cal;
 $entrega->update();
 return back();
 ```` 
@@ -872,26 +880,25 @@ Y pegamos el código de nuestro archivo `cal.html`
 Hacemos una nueva función en el controlador de Home
 >App/Http/Controller/HomeController 
 ```php
-public function cal($id){
+public function cal(){
 	return view('cal');
 }
 ````
 Y hacemos la ruta en `web.php` pasandole un parámetro
 ```php
-Route::get('/cal/{id}', 'HomeController@cal');
+Route::get('cal', 'HomeController@cal');
 ```
 Ese parámetro lo pasaremos desde la plantilla `app.blade.php`
 ```php
-<a href="{{ url('cal/'.Auth::user()->id) }}">Calificaciones</a>
+<a href="{{ route('cal') }}">Calificaciones</a>
  ```
 
 Y ahora pasamos a la vista los datos necesarios para que nos pueda mostrar las calificaciones
 
 ```php
-$entregas=Entrega::all();
-$user=User::findOrFail($id);
-return 
-view('cal', ['entregas'=>$entregas, 'user'=>$user]);
+$id=auth()->user()->id;
+$entregas=Entrega::where('user_id', $id)->get();
+return view('cal', ['entregas'=>$entregas]);
 ````
 
 *Importamos use App\User; y use App\Entrega;*
@@ -910,5 +917,3 @@ Ahora solo falta mostrar los datos en las vistas con un foreach
 @endif
 @endforeach
 ```
-
-
