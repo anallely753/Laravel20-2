@@ -1,0 +1,500 @@
+*{
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+	/*font-family: 'Gelasio', serif;*/
+	font-family: 'Lato', sans-serif;
+	color: #111;
+}
+
+html{
+	font-size: 100%;
+}
+
+/*COLORES*/
+.amarillo{
+	background-color: #FFEB95;
+}
+
+.verde{
+	background-color: #81E88B;
+}
+
+.rojo{
+	background-color: #E89382;
+}
+
+.azul{
+	background-color:#90C7FF;
+}
+
+.morado{
+	background-color: #BF8AFA;
+}
+
+
+/*
+	font-family: 'Gelasio', serif;
+	font-family: 'Fjalla One', sans-serif;
+	font-family: 'Lato', sans-serif;
+	*/
+
+/*WELCOME*/
+	.body__welcome{
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding: 10px;
+	}
+	.body__welcome h1{
+		font-size: 1.5rem;
+		margin-bottom: 5vh;
+		font-weight: lighter;
+		font-family: 'Gelasio', serif;
+	}
+	.body__welcome h2{
+		font-size: 3rem;
+		text-transform: uppercase;
+		text-align: center;
+		margin-bottom: 5vh;
+		font-family: 'Fjalla One', sans-serif;
+		text-shadow: 2px 2px 2px rgba(100, 100, 100, 1);
+		letter-spacing: 2px;
+		color: #BF8AFA;
+	}
+	.body__welcome h3{
+		font-size: 1.2rem;
+		text-align: center;
+		font-weight: lighter;
+		
+		font-family: 'Gelasio', serif;
+	}
+	.body__welcome a{
+		font-size: 1.5rem;
+		letter-spacing: 2px;
+		text-decoration: none;
+	}
+	.body__welcome a:hover{
+		text-decoration: underline;
+		color: #BF8AFA;
+	}
+
+/*LAYOUT*/
+	nav{
+		min-height: 70px;
+		background-color: #2b2b2b;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		padding: 0 20px;
+		flex-wrap: wrap;
+	}
+	nav a i{
+		color: white;
+		transform: scale(1.5);
+	}
+	nav a i:hover{
+		color: #BF8AFA;
+	}
+	nav>a:first-child{
+		position: absolute;
+		left: 20px;
+		top: 20px;
+		display: flex;
+	}
+	nav a{
+		color: white;
+		text-decoration: none;
+		margin-left: 20px;
+		font-size: 1rem;
+		letter-spacing: .7px;
+	}
+	nav a:hover{
+		color: #BF8AFA;
+		transform: scale(1.1);
+	}
+
+	nav a:last-child{
+		display: flex;
+		align-items: center;
+	}
+
+	.dropdown a{
+		display: flex;
+		align-items: center;
+	}
+
+	.dropdown-content {
+		display: none;
+		position: absolute;
+		background-color: #2b2b2b;
+		min-width: 160px;
+		padding: 20px 0;
+		z-index: 1;
+		text-decoration: none;
+	}
+	.dropdown-content a {
+		display: block;
+		padding-bottom: 20px;
+		font-weight: lighter;
+	}
+	.dropdown:hover .dropdown-content {
+		display: block;
+	}
+
+
+/*AUTH*/
+	.header__auth{
+		height: 25vh;
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		flex-direction: column;
+		border-bottom-style: solid;
+		margin:2vh 5vw;
+		padding-bottom: 2vh;
+		font-size: 1.3rem;
+		
+	}
+
+	.header__auth h1{
+		line-height: 150%;
+		font-family: 'Gelasio', serif;
+		font-weight: lighter;
+	}
+	.header__auth h2{
+		font-family: 'Fjalla One', sans-serif;
+		font-size: 2.5rem;
+		font-weight: lighter;
+	}
+
+	.section__auth{
+		display: flex;
+		justify-content: center;
+		padding-top: 5vh;
+	}
+
+	.form__auth{
+		border: 1px solid #999;
+		width: 70%;
+		display: flex;
+		flex-direction: column;
+		padding: 5vw;
+		border-radius: 8px;
+		margin-bottom: 10vh;
+	}
+
+	.section__auth form input{
+		font-family: 'Gelasio', serif;
+	}
+
+	.section__auth form input{
+		border-radius: 3px;
+		line-height: 200%;
+		margin-bottom: 20px;
+		padding: 5px 10px;
+		border-style: none;
+		outline: none;
+		font-size: .9rem;
+	}
+
+	.section__auth form input[type="submit"]{
+		margin: 5% 0 5% 0;
+		width: 90%;
+		align-self: center;
+		background-color: #2b2b2b;
+		color: #fff;
+	}
+
+	.section__auth form input:focus{
+		background-image: linear-gradient(315deg, #fff 0%, #ccc 74%);
+		padding: 5px;
+		color: #2b2b2b;
+	}
+	.section__auth form input[type="submit"]:hover{
+		align-self: center;
+		background-color: #fff;
+		background-image: linear-gradient(315deg, #fff 0%, #ccc 74%);
+		color: #444;
+		cursor: pointer;
+	}
+	.form__auth input[type="checkbox"]{
+		display: inline;
+	}
+	.form__auth #remember{
+		display: inline;
+		color: #fff;
+	}
+
+/*HOME*/
+	.home{
+		height: 20vh;
+	}
+	.main__home{
+		margin: 30px 5vw;
+	}
+	.home h1{
+		font-family: 'Gelasio', serif;
+		font-size: 1.5rem;
+	}
+	.home h2{
+		font-family: 'Fjalla One', sans-serif;
+		font-size: 2rem;
+	}
+	.main__home h3{
+		font-size: 1.5rem;
+		margin-bottom: 30px;
+		font-family: 'Gelasio', serif;
+		font-weight: lighter;
+	}
+
+	/*HOME-CARDS*/
+
+	.card__tareas{
+		border-radius: 5px;
+		border: .5px solid #888;
+		margin-bottom: 3vh;
+	}
+
+	.tareas--title{
+		display: flex;
+		height: min-content;
+		padding: 20px;
+		border-bottom: .5px solid #888;
+		flex-direction: column;
+	}
+	.tareas--title h4{
+		font-size: 1.5rem;
+		font-family: 'Fjalla One', sans-serif;
+		font-weight: lighter;
+	}
+
+	.tareas--title p{
+		padding: 10px;
+		font-size: 1rem;
+		font-family: 'Gelasio', serif;
+	}
+
+	.tareas--title button{
+		margin-top: 15px;
+		padding: 10px 5px;
+		font-size: 1.2rem;
+		border-radius: 3px;
+		border-style: none;
+		max-width: 150px;
+		text-decoration: none;
+	}
+	.tareas--title a button{
+		text-decoration: none;
+		font-size: 1rem;
+		font-family: 'Gelasio', serif;
+	}
+	.tareas--title button:hover{
+		background-color: #2b2b2b;
+		color: #fff;
+		cursor: pointer;
+	}
+	.tareas--title button:hover>a{
+		background-color: #2b2b2b;
+		color: #fff;
+	}
+	.tareas--content{
+		padding: 20px 40px;
+	}
+	.tareas--content h5{
+		font-size: 1.2rem;
+		margin-bottom: 10px;
+		font-family: 'Gelasio', serif;
+		/*font-weight: lighter;*/
+	}
+	.tareas--content h5 a, .tareas--content h5 span{
+		display: inline-block;
+		padding-left: 10px;
+	}
+	.tareas--content p{
+		font-size: 1.1rem;
+		line-height: 1.2;
+		margin-bottom: 10px;
+		text-align: justify;
+	}
+	.tareas--content h5:nth-child(3){
+		margin-top: 20px;
+	}
+	.tareas--content h5 span,.tareas--content h5 a {
+		font-weight: lighter;
+	}
+
+/*TAREAS INDEX*/
+	.tareas__index{
+		position: relative;
+		text-align: right;
+	}
+	.card__tareas{
+		text-align: left;
+		margin-bottom: 30px 0;
+	}
+
+	.tareas__index>button{
+		margin-bottom: 20px;
+		padding: 10px;
+		border-radius: 3px;
+		border-style: none;
+		max-width: 150px;
+	}
+	.tareas__index button:hover{
+		background-color: #2b2b2b;
+		color: #fff;
+	}
+	.tareas__index button:hover>a{
+		background-color: #2b2b2b;
+		color: #fff;
+	}
+	.tareas__index>button a{
+		text-decoration: none;
+		font-family: 'Gelasio', serif;
+		font-weight: lighter;
+		font-size: 1.1rem;
+	}
+	.tareas--action{
+		display:flex;
+	}
+
+	.tareas--action button{
+		margin: 0 5px;
+		font-family: 'Gelasio', serif;
+		font-size: 1.1rem;
+		padding: 10px;
+	}
+
+/*TAREAS CREATE*/
+
+	.card__tareas--create{
+		text-align: left;
+		padding: 20px;
+	}
+	.card__tareas--create form label{
+		display: block;
+		margin-bottom: 10px;
+		font-family: 'Gelasio', serif;
+		font-weight: bolder;
+	}
+	.card__tareas--create form input, textarea{
+		width: 100%;
+		border-radius: 3px;
+		line-height: 200%;
+		margin-bottom: 20px;
+		padding: 5px 10px;
+		border-style: none;
+		outline: none;
+		font-size: .9rem;
+	}
+
+	form label[for="time"],form label[for="date"]{
+		margin-left: 30px;
+		display: inline;
+		margin-right: 10px;
+	}
+
+	form input[name="time"], form input[name="date"]{
+		display: inline-block;
+		width: 60%;
+	}
+
+	.card__tareas--create form button{
+		margin-bottom: 20px;
+		padding: 10px;
+		font-size: 1rem;
+		border-radius: 3px;
+		border-style: none;
+		max-width: 150px;
+	}
+
+/*TAREAS SHOW*/
+
+	/*ENTREGAS*/
+
+	.entregas{
+		margin: 0 5vw;
+		text-align: left;
+	}
+	.entregas h2{
+		margin-top: 50px;
+		font-size: 1.7rem;
+		font-family: 'Gelasio', serif;
+		font-weight: lighter;
+	}
+
+	.entregas table{
+		margin-top: 30px;
+		width: 100%;
+		text-align: left;
+		border-radius: 3px;
+	}
+	.entregas table, .entregas tr, .entregas td, .entregas th{
+		padding: 15px;
+		font-family: 'Gelasio', serif;
+		font-weight: lighter;
+	}
+
+	.entregas table thead tr th{
+		font-size: 1.2rem;
+		border-style: none none solid none;
+		border-width: 1px;
+	}
+	.entregas table thead{
+		border-radius: 3px;
+	}
+
+	.entregas table tbody tr{
+		font-size: 1.2rem;
+	}
+
+	.entregas table form button{
+		padding: 10px;
+		font-size: 1rem;
+		border-radius: 3px;
+		border-style: none;
+		max-width: 150px;
+	}
+	.entregas table form button:hover{
+		background-color: #2b2b2b;
+		color: #fff;
+	}
+	.entregas tbody tr:hover{
+		background-image: linear-gradient(315deg, #fff 0%, #ccc 74%);
+	}
+
+/*SUBIR ARCHIVO*/
+.card__archivo{
+	width: 80%;
+	margin:auto;
+	margin-top: 40px;
+	padding: 40px;
+	text-align: center;
+}
+
+.d-none{
+	display: none;
+}
+
+.card__archivo input{
+	font-size: 1rem;
+}
+
+.card__archivo button{
+	margin-top: 20px;
+	padding: 10px;
+	font-size: 1rem;
+	border-radius: 3px;
+	border-style: none;
+	max-width: 150px;
+}
+
+.card__archivo button:hover{
+	background-color: #2b2b2b;
+	color: #fff;
+}
+
+

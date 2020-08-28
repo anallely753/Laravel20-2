@@ -1,0 +1,81 @@
+/*// Extra small devices (portrait phones, less than 576px)*/
+/*// No media query for `xs` since this is the default in Bootstrap*/
+
+/*// Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) { 
+	.body__welcome{
+		padding: 20px;
+	}
+	.tareas--title{
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.card__archivo{
+		width: 60%;
+	}
+	
+}
+
+/*// Medium devices (tablets, 768px and up)*/
+@media (min-width: 768px) { 
+	.body__welcome{
+		padding: 50px;
+	}
+	nav{
+		padding: 0 50px;
+	}
+	nav a:first-child{
+		left: 50px;
+	}
+	.form__auth{
+		width: 50%;
+	}
+	.home h2{
+		font-family: 'Fjalla One', sans-serif;
+		font-size: 2.5rem;
+	}
+	.card__tareas--create{
+		width: 60%;
+		margin: auto;
+	}
+	.entregas h2{
+		margin-top: 30px;
+		font-size: 1.7rem;
+	}
+	.card__archivo{
+		width: 40%;
+	}
+	.grades table{
+		width: 70%;
+		margin: auto;
+	}
+	
+}
+
+/*// Large devices (desktops, 992px and up)*/
+@media (min-width: 992px) { 
+	.form__auth{
+		width: 40%;
+	}	
+	.header__auth{
+		height: 20vh;
+	}
+	.card__archivo{
+		width: 35%;
+	}
+	.grades table{
+		width: 60%;
+		margin: auto;
+	}
+}
+
+/*// Extra large devices (large desktops, 1200px and up)*/
+@media (min-width: 1200px) { 
+	.form__auth{
+		width: 35%;
+	}
+	
+
+}

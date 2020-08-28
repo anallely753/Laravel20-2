@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Proteco Web</title>
+	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/mediaqueries.css">
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Gelasio&family=Lato:wght@300&display=swap" rel="stylesheet">
+	<!-- Icons -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+</head>
+<body>
+	<section class="header__auth home">
+		<h2>Registra una tarea</h2>
+	</section>
+	<main class="main__home tareas__index tareas__create">
+		<div class="card__tareas--create verde">
+			<form class="text-white" method="POST" >
+				<div class="form-group">
+					<label for="title">Título</label>
+					<input type="text" class="form-control" name="title">
+				</div>
+				<div class="form-group">
+					<label for="description">Descripción</label>
+					<textarea class="form-control" rows="3" name="description"></textarea>
+				</div>
+				<div class="form-group">
+					<label for="filetype">Tipo de archivo permitido</label>
+					<input type="text" class="form-control" name="filetype">
+				</div>
+				<div class="form-group">
+					<label id="fecha">Fecha de Entrega</label><br>
+					<label for="date">Día: </label>
+					<input type="date" name="date" value="2020-04-13"
+					min="2020-04-13" max="2020-06-13">
+				</div>
+				<div class="form-group">
+					<label for="time">Hora: </label>
+					<input type="time" name="time" value="00:00:00">
+				</div>
+				<div class="form-group">
+					<label for="file">Archivo Opcional</label>
+					<input type="file" name="file" enctype>
+				</div>
+				<br>
+				<button type="submit" class="btn bg-white">Guardar</button>
+			</form>
+		</div>
+	</main>
+</body>
+</html>

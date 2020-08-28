@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Proteco Web</title>
+	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/mediaqueries.css">
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Gelasio&family=Lato:wght@300&display=swap" rel="stylesheet">
+	<!-- Icons -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+</head>
+<body>
+	<section class="header__auth home">
+		<h2>Tarea</h2>
+	</section>
+	<main class="main__home tareas__show">
+		<div class="card__tareas amarillo">
+			<div class="tareas--title">
+				<h4>Nombre de la tarea</h4>
+				<p>Fecha de entrega: <b>03/02/20</b><br>A las <b>00:00</b> hrs</p>
+				<div class="tareas--action">
+					<a href="">
+						<button>Editar</button>
+					</a>
+					<form action="">
+						<button class="rojo" type="submit">
+							Eliminar
+						</button>
+					</form>
+				</div>
+			</div>
+			<div class="tareas--content">
+				<h5>Descripción:</h5>
+				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reprehenderit autem accusantium assumenda sunt commodi tempore quam ipsam labore asperiores, voluptates quo at nostrum aliquid, quae veniam nemo praesentium maiores facilis optio possimus aut. Magni corrupti iusto facilis atque ipsum est consectetur alias doloremque laudantium cum cupiditate ad dignissimos eos iste maxime eius vel, molestias, doloribus consequatur fuga harum voluptas. Perspiciatis blanditiis, atque possimus illum magnam corporis vel incidunt repellendus ullam.</p>
+				<h5>Archivo auxiliar: <a href="" title="">Archivo.pdf</a> </h5>
+				<h5>Archivo permitido:<span>.zip</span></h5>
+			</div>
+		</div>
+		<section class="entregas">
+			<h2>Entregas</h2>
+			<table class="table table-hover">
+				<thead class="azul">
+					<th scope="col">Usuario</th>
+					<th scope="col">Archivo</th>
+					<th scope="col">Calificación</th>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">Nombre del alumno</th>
+						<td>
+							<a target="_blank" href="">Archivo</a>
+						</td>
+						<td>
+							<form action="" method="POST">
+								
+								<input type="number" min="0" max="10" name="grade" value="0" 
+								>
+								<button class="verde" type="submit" >Guardar</button>
+							</form>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</section>
+	</main>
+</body>
+</html>

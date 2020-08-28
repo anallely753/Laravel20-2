@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Proyecto</title>
+	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/mediaqueries.css">
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Gelasio&family=Lato:wght@300&display=swap" rel="stylesheet">
+	<!-- Icons -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+</head>
+<body>
+	<section class="header__auth">
+		<h1>Hola</h1>
+		<h2>Inicia sesión</h2>
+	</section>
+	<section class="section__auth">
+		<form class="form__auth verde" method="POST" action="{{ route('login') }}">
+			@csrf
+			<input type="text"  placeholder="Correo Electrónico" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+			@error('email')
+			    <span class="invalid-feedback" role="alert">
+			        <strong>{{ $message }}</strong>
+			    </span>
+			@enderror
+			<input type="password" placeholder="Contraseña" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+			@error('password')
+			    <span class="invalid-feedback" role="alert">
+			        <strong>{{ $message }}</strong>
+			    </span>
+			@enderror
+			<label id="remember">
+				<input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+			    Recordar mis datos
+			</label>
+			<input type="submit">
+		</form>
+	</section>	
+</body>
+</html>

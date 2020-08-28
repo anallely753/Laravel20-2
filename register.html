@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>Proyecto</title>
+	<link rel="stylesheet" href="css/styles.css">
+	<link rel="stylesheet" href="css/mediaqueries.css">
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Fjalla+One&family=Gelasio&family=Lato:wght@300&display=swap" rel="stylesheet">
+</head>
+<body class="body__register">
+	<section class="header__auth">
+		<h1>Hola</h1>
+		<h2>Haz tu cuenta aquí</h2>
+	</section>
+	<section class="section__auth">
+		<form class="form__auth azul" method="POST" action="{{ route('register') }}">
+			@csrf
+			<input type="text" placeholder="Nombre" id="name" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+			@error('name')
+			    <span class="invalid-feedback" role="alert">
+			        <strong>{{ $message }}</strong>
+			    </span>
+			@enderror
+			<input type="email" placeholder="Correo Electrónico" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
+			@error('email')
+			    <span class="invalid-feedback" role="alert">
+			        <strong>{{ $message }}</strong>
+			    </span>
+			@enderror
+			<input type="password" placeholder="Contraseña" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
+			@error('password')
+			    <span class="invalid-feedback" role="alert">
+			        <strong>{{ $message }}</strong>
+			    </span>
+			@enderror
+			<input type="password" placeholder="Confirmar Contraseña" class="form-control" name="password_confirmation" required autocomplete="new-password">
+			<input type="submit">
+		</form>
+	</section>	
+</body>
+</html>
